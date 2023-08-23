@@ -59,9 +59,10 @@ public class UserController {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("accept", "application/json");
             int status = connection.getResponseCode();
-            if (status > 299) throw new UserDoesNotExistException(login);
+            if (status == 404) throw new UserDoesNotExistException(login);
             InputStream responseStream = connection.getInputStream();
             userDto = mapper.readValue(responseStream, UserDto.class);
+            responseStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
